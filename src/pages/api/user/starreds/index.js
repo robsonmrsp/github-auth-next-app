@@ -1,18 +1,58 @@
 import fetch from 'node-fetch';
 
-const user = async (req, res) => {
+const put = async (req, res) => {
   const token = req.headers['x-token'];
+  const body = req.body;
 
-  const responseUser = await fetch(`https://api.github.com/user`, {
+  const responseRepos = await fetch(`https://api.github.com//user/starred/${body.owner}/${body.repoName}`, {
     headers: {
+      Authorization: `token ${token}`,
+    },
+    method: 'PUT',
+  });
+  const authRepos = await responseRepos.json();
+  res.status(200).json(authRepos);
+};
+
+const del = async (req, res) => {
+  const token = req.headers['x-token'];
+  const body = JSON.parse(req.body);
+
+  console.log(token);
+  //
+  const response = await fetch(`https://api.github.com/user/starred/${body.owner}/${body.repoName}`, {
+    method: 'delete',
+    headers: {
+      accept: 'application/vnd.github.v3+json',
+      'Content-Length': 0,
       Authorization: `token ${token}`,
     },
   });
 
-  const authUser = await responseUser.json();
-  console.log(authUser);
-
-  res.status(200).json(authUser);
+  console.log('path', `https://api.github.com/user/starred/${body.owner}/${body.repoName}`);
+  res.status(200).json(response.ok);
 };
 
-export default user;
+const get = async (req, res) => {
+  const token = req.headers['x-token'];
+  const responseRepos = await fetch(`https://api.github.com/user/starred`, {
+    headers: {
+      Authorization: `token ${token}`,
+    },
+  });
+  const authRepos = await responseRepos.json();
+  res.status(200).json(authRepos);
+};
+
+const userRepos = async (req, res) => {
+  if (req.method === 'GET') {
+    await get(req, res);
+  } else if (req.method === 'PUT') {
+    await put(req, res);
+  } else if (req.method === 'DELETE') {
+    console.log('accept delete');
+    await del(req, res);
+  }
+};
+
+export default userRepos;

@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 
-const { faUsers, faLink, faStar } = require('@fortawesome/free-solid-svg-icons');
+const { faUsers, faLink, faStar, faPlusSquare, faMinusSquare } = require('@fortawesome/free-solid-svg-icons');
 const { FontAwesomeIcon } = require('@fortawesome/react-fontawesome');
 
-const CardUser = ({ user, starredRepos = [] }) => {
+const CardUser = ({ user, onAddStar, onRemoveStar, starredRepos = [] }) => {
   useEffect(() => {
     console.log('CardUser', starredRepos);
   }, [starredRepos]);
@@ -49,6 +49,24 @@ const CardUser = ({ user, starredRepos = [] }) => {
                           <FontAwesomeIcon icon={faLink} />
                           <span className="pl-1">{repo.name}</span>
                         </a>
+                      </td>
+                      <td>
+                        <button
+                          onClick={() => {
+                            onAddStar(repo.owner.login, repo.name);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faPlusSquare} />
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          onClick={() => {
+                            onRemoveStar(repo.owner.login, repo.name);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faMinusSquare} />
+                        </button>
                       </td>
                     </tr>
                   ))}

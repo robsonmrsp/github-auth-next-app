@@ -2,8 +2,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithubSquare } from '@fortawesome/free-brands-svg-icons';
 import { clientId, redirectUri } from '@/config/Constants';
 
-const Login = () => {
-  console.log('');
+const Login = ({ githubClientId, githubRedirectUri }) => {
+  console.log('Login');
   return (
     <>
       <section className="section hero is-fullheight">
@@ -19,7 +19,7 @@ const Login = () => {
                     </h1>
                     <hr />
                     <a
-                      href={`https://github.com/login/oauth/authorize?scope=user&client_id=${clientId}&redirect_uri=${redirectUri}&scope=user`}
+                      href={`https://github.com/login/oauth/authorize?scope=repo%20user%20repo_deployment&client_id=${githubClientId}&redirect_uri=${githubRedirectUri}`}
                       className="button is-large"
                     >
                       <span className="icon is-large">
@@ -38,4 +38,15 @@ const Login = () => {
   );
 };
 
+// Essa é apenas uma forma de passar a informação que está nas variaveis de ambiente(server-side) para o cliente.
+// A outra é configurando devidamente o next.config(como o que está feito e comentado). 
+// Feita essa configuração a variavel de ambiente poderá ser usada no  client-side.
+export const getServerSideProps = async (ctx) => {
+  return {
+    props: {
+      githubClientId: clientId,
+      githubRedirectUri: redirectUri,
+    },
+  };
+};
 export default Login;
