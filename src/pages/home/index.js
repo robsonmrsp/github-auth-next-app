@@ -3,10 +3,12 @@ import { MapContainer } from '@/shared/MapConainer';
 import CardUser from '@/components/CardUser';
 import { AppContext } from '@/shared/AppContext';
 import Router from 'next/router';
+import SearchField from '@/components/SearchField';
 
 const Home = () => {
   const { state, update } = useContext(AppContext);
   const [user, setUser] = useState();
+  const [secondUser, setSecondUser] = useState();
   const [starredRepos, setStarredRepos] = useState([]);
   const [fetchUserError, setFetchUserError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -50,6 +52,18 @@ const Home = () => {
     }
   };
 
+  const findSecondUser = async () => {
+    const response = await fetch(`http://localhost:3000/api/user`, {
+      headers: {
+        'x-token': localStorage.getItem('token'),
+      },
+    });
+    if (response.ok) {
+      const user = await response.json();
+      setSecondUser(user);
+    }
+  };
+
   const addStar = async (owner, repoName) => {
     console.log('addStar', owner, repoName);
   };
@@ -90,6 +104,7 @@ const Home = () => {
         <section className="hero">
           <div className="hero-body">
             <p className="title">GitHub App</p>
+            <SearchField onFetchUser={searchUser} />
           </div>
         </section>
         {user && (
@@ -99,7 +114,7 @@ const Home = () => {
                 <CardUser user={user} onAddStar={addStar} onRemoveStar={removeStar} starredRepos={starredRepos} />
               </div>
               <div className="column is-8">
-                <MapContainer location={user.location} />
+                <MapContainer location={user.location} secondLocation={secondUser && secondUser.location} />
               </div>
             </div>
           </div>

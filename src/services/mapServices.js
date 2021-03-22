@@ -43,6 +43,7 @@ export const addMarkerToLocation = (map, location, { zoom = 12, markOnCenter = f
     searchText: location,
   };
   const geocoder = platform.getGeocodingService();
+
   geocoder.geocode(
     geocodingParams,
     (result) => {
@@ -61,6 +62,41 @@ export const addMarkerToLocation = (map, location, { zoom = 12, markOnCenter = f
     }
   );
 };
+
+const getPositionByAddress = (query) => {
+  return new Promise((resolve, reject) => {
+    const geocoder = platform.getGeocodingService();
+    geocoder.geocode(
+      { searchText: query },
+      (result) => {
+        if (result.Response.View.length > 0) {
+          if (result.Response.View[0].Result.length > 0) {
+            const location = result.Response.View[0].Result[0];
+            const point = {
+              latitude: location.Location.DisplayPosition.Latitude,
+              longitude: location.Location.DisplayPosition.Longitude,
+            };
+            resolve(point);
+          } else {
+            reject({ message: 'no results found' });
+          }
+        } else {
+          reject({ message: 'no results found' });
+        }
+      },
+      (error) => {
+        reject(error);
+      }
+    );
+  });
+};
+export const plotRouteByLocations = async (map, startLocation, endLocation) => {
+  const startPoint = await getPositionByAddress(startLocation);
+  const endPoint = await getPositionByAddress(endLocation);
+
+  plotRoute(map, startPoint, endPoint);
+};
+
 /**
  *
  * @param {*} map
