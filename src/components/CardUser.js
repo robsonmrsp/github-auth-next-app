@@ -13,7 +13,7 @@ const CardUser = ({ user, onAddStar, onRemoveStar, starredRepos = [] }) => {
         <div className="media">
           <div className="media-left">
             <figure className="image is-48x48">
-              <img src={user.avatar_url} alt="Placeholder image" />
+              <img src={user.avatar_url} alt="avatar" />
             </figure>
           </div>
           <div className="media-content">
