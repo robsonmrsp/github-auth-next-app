@@ -30,10 +30,16 @@ const AuthLayout = ({ children }) => {
     try {
       const authUser = await fetchUser();
       const starredRepos = await fetchStarred();
+      if (!authUser) {
+        update({ loading: false, error: 'Usuário não encontrado' });
+      } else {
+        update({ loading: false, error: '', authUser, starredRepos });
+      }
+
       update({ loading: false, error: '', authUser, starredRepos });
     } catch (error) {
       console.error(error);
-      update({ loading: false, error });
+      update({ loading: false, error: 'Erro ao buscar um ' });
     }
   };
 
@@ -68,7 +74,9 @@ const AuthLayout = ({ children }) => {
     const response = await fetch(`${API_URL}/guest/${userName}`);
     if (response.ok) {
       const secondUser = await response.json();
-      update({ loading: false, secondUser });
+      update({ loading: false, secondUser, error: '' });
+    } else {
+      update({ loading: false, error: 'Erro ao localizar outro usuário' });
     }
     update({ loading: false });
   };
@@ -113,6 +121,7 @@ const AuthLayout = ({ children }) => {
               <h1 className="title">Git hub app {state.loading ? ' ( processing... )' : ''}</h1>
               {/* já pensando na lógica unificada. fetchUSer se comportaria dependendo do logado ou não. */}
               <SearchField placeholder="Find a github user partner" onFetchUser={findSecondUser} />
+              {state.error && <div className="has-text-danger">{state.error}!</div>}
             </div>
           </div>
         </section>

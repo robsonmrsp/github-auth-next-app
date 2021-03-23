@@ -11,7 +11,7 @@ const put = async (req, res) => {
     method: 'PUT',
   });
   const authRepos = await responseRepos.json();
-  res.status(200).json(authRepos);
+  res.status(responseRepos.status).json(authRepos);
 };
 
 const del = async (req, res) => {
@@ -30,7 +30,7 @@ const del = async (req, res) => {
   });
 
   console.log('path', `https://api.github.com/user/starred/${body.owner}/${body.repoName}`);
-  res.status(200).json(response.ok);
+  res.status(response.status).json(response.ok);
 };
 
 const get = async (req, res) => {
@@ -40,8 +40,8 @@ const get = async (req, res) => {
       Authorization: `token ${token}`,
     },
   });
-  const authRepos = await responseRepos.json();
-  res.status(200).json(authRepos);
+  const json = await responseRepos.json();
+  res.status(responseRepos.status).json(json);
 };
 
 const userRepos = async (req, res) => {
