@@ -7,7 +7,7 @@ import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { API_URL } from '@/config/Constants';
 
 const Layout = ({ children }) => {
-  const { update } = useContext(AppContext);
+  const { state, update } = useContext(AppContext);
 
   const searchUser = async (loginName) => {
     update({ loading: true, user: null, error: '' });
@@ -74,7 +74,7 @@ const Layout = ({ children }) => {
         <section className="hero is-primary">
           <div className="hero-body">
             <div className="container">
-              <h1 className="title">Git hub app</h1>
+              <h1 className="title">Git hub app {state.loading ? ' ( processing... )' : ''}</h1>
               <SearchField placeholder="Find a github user" onFetchUser={searchUser} />
             </div>
           </div>

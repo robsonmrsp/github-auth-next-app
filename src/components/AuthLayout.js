@@ -10,7 +10,7 @@ import { API_URL } from '@/config/Constants';
 
 // FIX-ME Essa duplicação de código seria resolvida sem aumento de
 // complexidade nesse componente se aumentarmos o nivel de abstração dos
-// servicos de acesso a API. De tal maneira que  Layout e AuthLayou seriam uma só.
+// servicos de acesso a API. De tal maneira que Layout e AuthLayou seriam uma só.
 // Mas acho qeu não dá tempo.
 const AuthLayout = ({ children }) => {
   const { state, update } = useContext(AppContext);
@@ -64,11 +64,13 @@ const AuthLayout = ({ children }) => {
   };
 
   const findSecondUser = async (userName) => {
+    update({ loading: true });
     const response = await fetch(`${API_URL}/guest/${userName}`);
     if (response.ok) {
       const secondUser = await response.json();
-      update({ secondUser });
+      update({ loading: false, secondUser });
     }
+    update({ loading: false });
   };
 
   return (
@@ -108,7 +110,7 @@ const AuthLayout = ({ children }) => {
         <section className="hero is-primary">
           <div className="hero-body">
             <div className="container">
-              <h1 className="title">Git hub app</h1>
+              <h1 className="title">Git hub app {state.loading ? ' ( processing... )' : ''}</h1>
               {/* já pensando na lógica unificada. fetchUSer se comportaria dependendo do logado ou não. */}
               <SearchField placeholder="Find a github user partner" onFetchUser={findSecondUser} />
             </div>

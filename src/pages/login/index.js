@@ -19,7 +19,7 @@ const Login = ({ githubClientId, githubRedirectUri }) => {
           <div className="container">
             <div className="columns ">
               <div className="column is-three-fifths is-offset-one-fifth">
-                <article class="panel is-primary">
+                <article className="panel is-primary">
                   <p className="panel-heading  is-primary">Login</p>
                   <div className="card ">
                     <div className=" card-content has-text-centered">
