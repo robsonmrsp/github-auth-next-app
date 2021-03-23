@@ -10,5 +10,6 @@ module.exports = {
     '^@/components/(.*)': '<rootDir>/src/components/$1',
     '^@/shared/(.*)': '<rootDir>/src/shared/$1',
     '^@/config/(.*)': '<rootDir>/src/config/$1',
+    '^@/services/(.*)': '<rootDir>/src/services/$1',
   },
 };

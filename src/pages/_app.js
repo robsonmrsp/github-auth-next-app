@@ -3,10 +3,7 @@ import '../styles/globals.css';
 
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { AppProvider } from '@/shared/AppContext';
-import { HereMap } from '@/shared/HereMap';
 
-// HereMap.initialize();
-// Create a client
 const queryClient = new QueryClient();
 
 const App = ({ Component, pageProps }) => {
