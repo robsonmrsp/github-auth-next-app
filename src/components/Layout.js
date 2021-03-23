@@ -14,7 +14,11 @@ const Layout = ({ children }) => {
     if (loginName) {
       const user = await fetchUser(loginName);
       const starredRepos = await fetchStarred(loginName);
-      update({ loading: false, error: '', user, starredRepos });
+      if (!user) {
+        update({ loading: false, error: 'Usuário não encontrado' });
+      } else {
+        update({ loading: false, error: '', user, starredRepos });
+      }
     }
     update({ loading: false });
   };
@@ -76,6 +80,7 @@ const Layout = ({ children }) => {
             <div className="container">
               <h1 className="title">Git hub app {state.loading ? ' ( processing... )' : ''}</h1>
               <SearchField placeholder="Find a github user" onFetchUser={searchUser} />
+              {state.error && <div className="has-text-danger">{state.error}!</div>}
             </div>
           </div>
         </section>

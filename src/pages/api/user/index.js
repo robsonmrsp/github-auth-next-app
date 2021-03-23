@@ -9,8 +9,8 @@ const user = async (req, res) => {
     },
   });
 
-  const authUser = await responseUser.json();
-  res.status(200).json(authUser);
+  const json = await responseUser.json();
+  res.status(responseUser.status).json(json);
 };
 
 export default user;
