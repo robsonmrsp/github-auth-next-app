@@ -20,7 +20,7 @@ const SearchField = ({ placeholder, onFetchUser }) => {
       </div>
       <div className="control">
         <button type="button" className="button is-info" onClick={() => onFetchUser(searchInput.current.value)}>
-          Buscar
+          Search
         </button>
       </div>
     </div>

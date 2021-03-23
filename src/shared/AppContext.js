@@ -6,7 +6,10 @@ export const AppContext = createContext();
 
 const initialState = {
   userName: '',
-  isUserLoggedIn : false,
+  loading: false,
+  user: null,
+  starredRepos: [],
+  isUserLoggedIn: false,
 };
 
 export const AppProvider = ({ children }) => {
