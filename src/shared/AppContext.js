@@ -4,6 +4,8 @@ const reducer = (state, pair) => ({ ...state, ...pair });
 
 export const AppContext = createContext();
 
+const IS_BROWSER = typeof window !== 'undefined';
+
 const initialState = {
   userName: '',
   isAuthUser: false,

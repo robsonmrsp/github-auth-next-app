@@ -10,8 +10,6 @@ const user = async (req, res) => {
   });
 
   const authUser = await responseUser.json();
-  console.log(authUser);
-
   res.status(200).json(authUser);
 };
 
