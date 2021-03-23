@@ -52,12 +52,8 @@ const Home = () => {
     }
   };
 
-  const findSecondUser = async () => {
-    const response = await fetch(`http://localhost:3000/api/user`, {
-      headers: {
-        'x-token': localStorage.getItem('token'),
-      },
-    });
+  const findSecondUser = async (userName) => {
+    const response = await fetch(`https://api.github.com/users/${userName}`);
     if (response.ok) {
       const user = await response.json();
       setSecondUser(user);
@@ -104,7 +100,7 @@ const Home = () => {
         <section className="hero">
           <div className="hero-body">
             <p className="title">GitHub App</p>
-            <SearchField onFetchUser={searchUser} />
+            <SearchField onFetchUser={findSecondUser} />
           </div>
         </section>
         {user && (

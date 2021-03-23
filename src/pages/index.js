@@ -53,7 +53,7 @@ export default function Home() {
         <section className="hero">
           <div className="hero-body">
             <p className="title">GitHub App</p>
-            <SearchField onFetchUser={searchUser} />
+            <SearchField placeholder="Find a repository" onFetchUser={searchUser} />
           </div>
         </section>
         {user && (
@@ -69,28 +69,6 @@ export default function Home() {
           </div>
         )}
       </>
-      {/* 
-      <section className="section hero is-fulheight">
-        <div className="hero-body">
-          <div className="container">
-            <div className="columns is-centered">
-              <div className="column is-two-fifths">
-                <div className="is-fullpag-layout">
-                  <SearchField onFetchUser={searchUser} />
-                  {loading && <p className="has-text-danger"> pesquisando...</p>}
-                  {fetchUserError && <p className="has-text-danger"> Não foi possivel localizar usuário</p>}
-                  {user && (
-                    <>
-                      <CardUser user={user} />
-                      <MapContainer />
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section> */}
     </>
   );
 }

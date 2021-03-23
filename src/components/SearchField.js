@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 
-const SearchField = ({ onFetchUser }) => {
+const SearchField = ({ placeholder, onFetchUser }) => {
   const searchInput = useRef(null);
 
   return (
@@ -10,7 +10,7 @@ const SearchField = ({ onFetchUser }) => {
           className="input"
           ref={searchInput}
           type="text"
-          placeholder="Find a repository"
+          placeholder={placeholder}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
               onFetchUser && onFetchUser(searchInput.current.value);

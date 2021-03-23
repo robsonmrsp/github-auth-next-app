@@ -1,5 +1,13 @@
 var platform;
+var behavior;
+var ui;
 
+/**
+ *
+ * @param {*} mapContainer ref do conteiner do mapa
+ * @param {*} objeto contendo as configuracoes do mapa. Por agora apenas o zoom
+ * @returns
+ */
 export const getMap = (mapContainer, { zoom = 12 }) => {
   platform = new H.service.Platform({
     app_id: 'aYuVBS2vsrMhXCX6vr1z',
@@ -13,15 +21,19 @@ export const getMap = (mapContainer, { zoom = 12 }) => {
   });
 
   // Just add some map behavior on screen like pan and controls
-  const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-  const ui = H.ui.UI.createDefault(map, defaultLayers);
+  behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+  ui = H.ui.UI.createDefault(map, defaultLayers);
 
   return map;
 };
+
 /**
- * params map, point, options
+ *
+ * @param {*} map
+ * @param {*} posicao Ponto onde o marcador precisa ser adicionado
+ * @param {*} options uma descrição e um boolean indicando para centralizar o mapa nesse marcador.
  */
-export const addMarker = (map, { latitude, longitude }, { markOnCenter = false } = {}) => {
+export const addMarker = (map, { latitude, longitude }, { markOnCenter = false, markerDescription } = {}) => {
   if (!map) {
     throw Error('you need a map to add marker, use getMap function');
   }
@@ -30,11 +42,22 @@ export const addMarker = (map, { latitude, longitude }, { markOnCenter = false }
     lng: longitude,
   };
   const marker = new H.map.Marker(position);
-  map.addObject(marker);
-
+  if (markerDescription) {
+    map.addObject(marker);
+    const bubble = new H.ui.InfoBubble(position, {
+      content: `<h6 class="chico-test">${markerDescription}</h6>`,
+    });
+    ui.addBubble(bubble);
+  }
   if (markOnCenter) map.setCenter(position);
 };
 
+/**
+ *
+ * @param {*} map
+ * @param {*} location endereço do maracador.
+ * @param {*} options uma descrição e um boolean indicando para centralizar o mapa nesse marcador.
+ */
 export const addMarkerToLocation = (map, location, { zoom = 12, markOnCenter = false } = {}) => {
   if (!location) {
     throw Error('you need to call passing a location, try something like "Fortaleza"');
@@ -47,14 +70,14 @@ export const addMarkerToLocation = (map, location, { zoom = 12, markOnCenter = f
   geocoder.geocode(
     geocodingParams,
     (result) => {
-      const location = result.Response.View[0].Result[0];
+      const res = result.Response.View[0].Result[0];
       addMarker(
         map,
         {
-          latitude: location.Location.DisplayPosition.Latitude,
-          longitude: location.Location.DisplayPosition.Longitude,
+          latitude: res.Location.DisplayPosition.Latitude,
+          longitude: res.Location.DisplayPosition.Longitude,
         },
-        { markOnCenter }
+        { markOnCenter, markerDescription: location }
       );
     },
     (e) => {
@@ -63,11 +86,16 @@ export const addMarkerToLocation = (map, location, { zoom = 12, markOnCenter = f
   );
 };
 
-const getPositionByAddress = (query) => {
+/**
+ *
+ * @param {*} queryLocation um endereço. Aqui supersimplificado contendo apenas uma cidade
+ * @returns
+ */
+const getPositionByAddress = (queryLocation) => {
   return new Promise((resolve, reject) => {
     const geocoder = platform.getGeocodingService();
     geocoder.geocode(
-      { searchText: query },
+      { searchText: queryLocation },
       (result) => {
         if (result.Response.View.length > 0) {
           if (result.Response.View[0].Result.length > 0) {
@@ -90,52 +118,66 @@ const getPositionByAddress = (query) => {
     );
   });
 };
-export const plotRouteByLocations = async (map, startLocation, endLocation) => {
-  const startPoint = await getPositionByAddress(startLocation);
-  const endPoint = await getPositionByAddress(endLocation);
-
-  plotRoute(map, startPoint, endPoint);
-};
 
 /**
  *
  * @param {*} map
- * @param {*} startPoint a position to be converted in waypoint like '37.7397,-121.4252'
- * @param {*} endPoint
+ * @param {*} startLocation nome da localização inicial, exemplo Maracanaú
+ * @param {*} endLocation nome da localização final, exemplo Pacatuba
+ */
+export const plotRouteByLocations = async (map, startLocation, endLocation) => {
+  const startPoint = await getPositionByAddress(startLocation);
+  const endPoint = await getPositionByAddress(endLocation);
+
+  const route = await plotRoute(map, startPoint, endPoint);
+  return route;
+};
+
+/**
+ * @param {*} map
+ * @param {*} startPoint posição em formato texto contento latitude e longitude
+ * @param {*} endPoint mesmo...
  */
 export const plotRoute = (map, startPoint, endPoint) => {
-  const params = {
-    mode: 'fastest;car;traffic:enabled',
-    waypoint0: `${startPoint.latitude},${startPoint.longitude}`,
-    waypoint1: `${endPoint.latitude},${endPoint.longitude}`,
-    representation: 'display',
-  };
-  const startPosition = {
-    lat: startPoint.latitude,
-    lng: startPoint.longitude,
-  };
-  map.setCenter(startPosition);
-  const routingService = platform.getRoutingService();
-  routingService.calculateRoute(
-    params,
-    (success) => {
-      const routeLineString = new H.geo.LineString();
-      success.response.route[0].shape.forEach((point) => {
-        const [lat, lng] = point.split(',');
-        routeLineString.pushPoint({
-          lat: lat,
-          lng: lng,
+  return new Promise((resolve, reject) => {
+    const params = {
+      mode: 'fastest;car;traffic:enabled',
+      waypoint0: `${startPoint.latitude},${startPoint.longitude}`,
+      waypoint1: `${endPoint.latitude},${endPoint.longitude}`,
+      representation: 'display',
+      routeAttributes: 'summary',
+    };
+    const startPosition = {
+      lat: startPoint.latitude,
+      lng: startPoint.longitude,
+    };
+    map.setCenter(startPosition);
+    const routingService = platform.getRoutingService();
+    routingService.calculateRoute(
+      params,
+      (success) => {
+        const routeLineString = new H.geo.LineString();
+        const route = success.response.route[0];
+        route.shape.forEach((point) => {
+          const [lat, lng] = point.split(',');
+          routeLineString.pushPoint({
+            lat: lat,
+            lng: lng,
+          });
         });
-      });
-      const routePolyline = new H.map.Polyline(routeLineString, {
-        style: {
-          lineWidth: 5,
-        },
-      });
-      map.addObject(routePolyline);
-    },
-    (error) => {
-      console.log(error);
-    }
-  );
+        const routePolyline = new H.map.Polyline(routeLineString, {
+          style: {
+            lineWidth: 5,
+          },
+        });
+        map.addObject(routePolyline);
+        const distance = route.summary.distance;
+        const theRoute = { routePolyline, distance };
+        resolve(theRoute);
+      },
+      (error) => {
+        reject(error);
+      }
+    );
+  });
 };
