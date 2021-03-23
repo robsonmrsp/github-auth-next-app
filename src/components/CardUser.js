@@ -50,7 +50,8 @@ const CardUser = ({ user, isAuthUser, onAddStar, onRemoveStar, starredRepos = []
                       </td>
                       {isAuthUser && (
                         <>
-                          <td>
+                          {/*  
+                           <td>
                             <button
                               onClick={() => {
                                 onAddStar(repo.owner.login, repo.name);
@@ -58,7 +59,7 @@ const CardUser = ({ user, isAuthUser, onAddStar, onRemoveStar, starredRepos = []
                             >
                               <FontAwesomeIcon icon={faPlusSquare} />
                             </button>
-                          </td>
+                          </td> */}
                           <td>
                             <button
                               onClick={() => {
