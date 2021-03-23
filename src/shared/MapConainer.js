@@ -1,25 +1,35 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { getMap, addMarkerToLocation, plotRouteByLocations, plotRoute } from '@/services/mapServices';
 
-export const MapContainer = ({ location, secondLocation,  center, routePoints = [] }) => {
+let map = null;
+export const MapContainer = ({ location, secondLocation }) => {
   const mapRef = useRef();
-  let map = null;
+  const [mapInfo, setMapInfo] = useState('');
 
   useEffect(() => {
     map = getMap(mapRef.current, { zoom: 16 });
     addMarkerToLocation(map, location, { markOnCenter: true });
-    // plotRoute(map, { latitude: '-3.877545', longitude: '-38.629777' }, { latitude: '-3.725925', longitude: '-38.523001' });
-
-
-    plotRouteByLocations(map, 'Maracanau', 'Pacatuba');
   }, []);
 
-  // useEffect(() => {
-  //   plotRoute(map, { latitude: '-3.877545', longitude: '-38.629777' }, { latitude: '-3.725925', longitude: '-38.523001' });
-  // }, [location, secondLocation]);
+  const updateMap = useCallback(async () => {
+    setMapInfo('');
+    if (location && secondLocation) {
+      const route = await plotRouteByLocations(map, location, secondLocation);
+      addMarkerToLocation(map, location, { markOnCenter: true });
+      addMarkerToLocation(map, secondLocation, { markOnCenter: true });
+      if (route.distance) {
+        setMapInfo(`Distancia total aproximadamente: ${parseInt(route.distance / 1000)} km`);
+      }
+    }
+  }, [location, secondLocation]);
+
+  useEffect(() => {
+    updateMap();
+  }, [updateMap]);
 
   return (
     <div className="container is-max-desktop">
+      {mapInfo}
       <div ref={mapRef} style={{ height: '480px' }} id="myMap"></div>
     </div>
   );
