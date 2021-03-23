@@ -6,12 +6,12 @@ import * as nodeFetch from 'node-fetch';
 import { AppContext } from '@/shared/AppContext';
 
 const Validate = ({ authUser, token }) => {
-  const { state, update } = useContext(AppContext);
+  const { update } = useContext(AppContext);
 
   useEffect(() => {
     if (token) {
       localStorage.setItem('token', token);
-      update({ isUserLoggedIn: !!token });
+      update({ isAuthUser: !!token });
       Router.push({
         pathname: '/home/',
       });
@@ -38,15 +38,6 @@ export const getServerSideProps = async (ctx) => {
   const responseAccessTokenText = await responseAccessToken.text();
   const params = new URLSearchParams(responseAccessTokenText);
   const accessToken = params.get('access_token');
-
-  // const responseUser = await nodeFetch(`https://api.github.com/user`, {
-  //   headers: {
-  //     Authorization: `token ${accessToken}`,
-  //   },
-  // });
-
-  // const authUser = await responseUser.json();
-  // console.log(authUser);
 
   return {
     props: {
