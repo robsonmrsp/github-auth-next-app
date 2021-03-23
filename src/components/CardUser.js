@@ -3,10 +3,8 @@ import { useEffect } from 'react';
 const { faUsers, faLink, faStar, faPlusSquare, faMinusSquare } = require('@fortawesome/free-solid-svg-icons');
 const { FontAwesomeIcon } = require('@fortawesome/react-fontawesome');
 
-const CardUser = ({ user, onAddStar, onRemoveStar, starredRepos = [] }) => {
-  useEffect(() => {
-    console.log('CardUser', starredRepos);
-  }, [starredRepos]);
+const CardUser = ({ user, isAuthUser, onAddStar, onRemoveStar, starredRepos = [] }) => {
+  console.log('CardUser');
   return (
     <div className="card">
       <div className="card-content">
@@ -50,24 +48,28 @@ const CardUser = ({ user, onAddStar, onRemoveStar, starredRepos = [] }) => {
                           <span className="pl-1">{repo.name}</span>
                         </a>
                       </td>
-                      <td>
-                        <button
-                          onClick={() => {
-                            onAddStar(repo.owner.login, repo.name);
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faPlusSquare} />
-                        </button>
-                      </td>
-                      <td>
-                        <button
-                          onClick={() => {
-                            onRemoveStar(repo.owner.login, repo.name);
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faMinusSquare} />
-                        </button>
-                      </td>
+                      {isAuthUser && (
+                        <>
+                          <td>
+                            <button
+                              onClick={() => {
+                                onAddStar(repo.owner.login, repo.name);
+                              }}
+                            >
+                              <FontAwesomeIcon icon={faPlusSquare} />
+                            </button>
+                          </td>
+                          <td>
+                            <button
+                              onClick={() => {
+                                onRemoveStar(repo.owner.login, repo.name);
+                              }}
+                            >
+                              <FontAwesomeIcon icon={faMinusSquare} />
+                            </button>
+                          </td>
+                        </>
+                      )}
                     </tr>
                   ))}
                 </tbody>
