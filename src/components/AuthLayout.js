@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Router from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { API_URL } from '@/config/Constants';
 
 // FIX-ME Essa duplicação de código seria resolvida sem aumento de
 // complexidade nesse componente se aumentarmos o nivel de abstração dos
@@ -38,7 +39,7 @@ const AuthLayout = ({ children }) => {
 
   // TODO Implementar algum tratamento de erro
   const fetchUser = async () => {
-    const response = await fetch(`http://localhost:3000/api/user`, {
+    const response = await fetch(`${API_URL}/user`, {
       headers: {
         'x-token': localStorage.getItem('token'),
       },
@@ -51,7 +52,7 @@ const AuthLayout = ({ children }) => {
 
   //TODO Implementar algum tratamento de erro
   const fetchStarred = async () => {
-    const resp = await fetch(`http://localhost:3000/api/user/starreds`, {
+    const resp = await fetch(`${API_URL}/user/starreds`, {
       headers: {
         'x-token': localStorage.getItem('token'),
       },
@@ -63,7 +64,7 @@ const AuthLayout = ({ children }) => {
   };
 
   const findSecondUser = async (userName) => {
-    const response = await fetch(`https://api.github.com/users/${userName}`);
+    const response = await fetch(`${API_URL}/guest/${userName}`);
     if (response.ok) {
       const secondUser = await response.json();
       update({ secondUser });
