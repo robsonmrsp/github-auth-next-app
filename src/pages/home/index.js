@@ -3,7 +3,6 @@ import { MapContainer } from '@/shared/MapConainer';
 import CardUser from '@/components/CardUser';
 import { AppContext } from '@/shared/AppContext';
 import AuthLayout from '@/components/AuthLayout';
-import { API_URL } from '@/config/Constants';
 
 const Home = () => {
   const { state } = useContext(AppContext);
@@ -18,7 +17,7 @@ const Home = () => {
   };
 
   const removeStar = async (owner, repoName) => {
-    const resp = await fetch(`${API_URL}/user/starreds`, {
+    const resp = await fetch(`http://localhost:3000/api/user/starreds`, {
       method: 'DELETE',
       body: JSON.stringify({ owner, repoName }),
       headers: {
