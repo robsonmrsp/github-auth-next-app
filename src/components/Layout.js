@@ -4,7 +4,6 @@ import SearchField from '@/components/SearchField';
 import { AppContext } from '@/shared/AppContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
-import { API_URL } from '@/config/Constants';
 
 const Layout = ({ children }) => {
   const { update } = useContext(AppContext);
@@ -20,8 +19,7 @@ const Layout = ({ children }) => {
   };
 
   const fetchUser = async (userName) => {
-    console.log('API_URL', API_URL);
-    const response = await fetch(`${API_URL}/guest/${userName}`);
+    const response = await fetch(`https://api.github.com/users/${userName}`);
     if (response.ok) {
       const user = await response.json();
       return user;
@@ -29,8 +27,7 @@ const Layout = ({ children }) => {
   };
 
   const fetchStarred = async (userName) => {
-    console.log('API_URL', API_URL);
-    const resp = await fetch(`${API_URL}/guest/${userName}/starreds`);
+    const resp = await fetch(`https://api.github.com/users/${userName}/starred`);
     if (resp.ok) {
       const starredRepos = await resp.json();
       return starredRepos;
