@@ -2,33 +2,49 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+This is a Basic React.js + Next.js application, so, after you clone the project, be sure that you have installed all the deps.
+
+
+```bash
+npm install
+# or
+yarn 
+```
+
+After this, run the development server:
 
 ```bash
 npm run dev
 # or
 yarn dev
 ```
+## Running tests
+- The unit tests can be run as follow:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```bash
+npm run test
+# or
+yarn test
+```
+- And the e2e tests:
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+```bash
+npm run e2e
+# or
+yarn e2e
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+We split the application basically into two pages:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Open [http://localhost:3000/](http://localhost:3000/)  shows the application for a guest user, ie, it's open for a non-loggued in user.
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+Once the user gets logged in, He'll be redirected to the page[http://localhost:3000/home](http://localhost:3000/home).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+if a user tries to get the page [http://localhost:3000/home](http://localhost:3000/home) without login, the user will be redirected to the login page.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Any constructive criticism is welcome, and please, if you believe any of this code can be copied for your project, please fix if before use. (:D)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Thanks.
